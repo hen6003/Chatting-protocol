@@ -1,0 +1,7 @@
+* Chatting protocol
+Simple chatting protocol over TCP streams
+
+With example server and client
+
+** Specification
+Read [[file:spec.org][spec.org]]

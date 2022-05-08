@@ -21,7 +21,7 @@ use crossterm::{
 
 pub async fn client() {
     // Connect to server
-    let stream = TcpStream::connect("127.0.0.1:6379").await.unwrap();
+    let stream = TcpStream::connect("127.0.0.1:6078").await.unwrap();
     let (reader, mut writer) = stream.into_split();
     let reader = BufReader::new(reader);
 

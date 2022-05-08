@@ -12,7 +12,7 @@ use tokio::{
 
 #[tokio::main]
 async fn main() {
-    let listener = TcpListener::bind("127.0.0.1:6379").await.unwrap();
+    let listener = TcpListener::bind("127.0.0.1:6078").await.unwrap();
     let (chan_tx, chan_rx) = mpsc::channel::<InternalCommand>(100);
 
     // Start channel manager thread
