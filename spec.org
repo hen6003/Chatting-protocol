@@ -9,8 +9,6 @@ Commands are structured with
 <command|letter> <data>\n
 #+END_SRC
 
-<command> can either be the full commands name or its letter alias.
-
 *** Commands to server
 | letter | command | data        | info                       |
 |--------+---------+-------------+----------------------------|
