@@ -1,1 +1,18 @@
 * Specification
+Commands are structured with
+#+BEGIN_SRC
+<command> <data>
+#+END_SRC
+
+<command> can either be the full commands name or its letter alias
+
+** Commands to server
+| letter | commands | data        | info                       |
+|--------+----------+-------------+----------------------------|
+| n      | name     | <new name>  | name cannot contain spaces |
+| m      | msg      | <message..> |                            |
+
+** Commands to client
+| letter | commands | data                      | info |
+|--------+----------+---------------------------+------|
+| m      | msg      | <sender name> <message..> |      |
