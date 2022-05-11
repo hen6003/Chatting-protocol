@@ -1,4 +1,12 @@
 * Specification
+Usernames cannot contain spaces.
+
+** Connection
+S: Listens on port 6078
+C: Opens connection
+S: Accepts connection
+C: Sends username
+S/C: Starts sending commands
 
 ** Commands
 Commands are the data sent back and forth from clients and servers, they /should/ be processed a line at a time by the server, in the order they came in.
@@ -10,12 +18,15 @@ Commands are structured with
 #+END_SRC
 
 *** Commands to server
-| letter | command | data        | info                       |
-|--------+---------+-------------+----------------------------|
-| n      | name    | <new name>  | name cannot contain spaces |
-| m      | msg     | <message..> |                            |
+| letter | command | data        | info            |
+|--------+---------+-------------+-----------------|
+| n      | name    | <username>  | change username |
+| m      | msg     | <message..> | send a message  |
 
 *** Commands to client
-| letter | command | data                      | info |
-|--------+---------+---------------------------+------|
-| m      | msg     | <sender name> <message..> |      |
+| letter | command    | data                          | info               |
+|--------+------------+-------------------------------+--------------------|
+| m      | msg        | <username> <message..>        |                    |
+| c      | connect    | <username>                    | new user connected |
+| d      | disconnect | <username>                    | user disconnected  |
+| r      | rename     | <old namename> <new namename> | user changed name  |

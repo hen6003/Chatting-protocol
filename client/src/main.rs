@@ -11,13 +11,14 @@ use crossterm::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    let addr = "127.0.0.1:6078".parse().unwrap();
     let mut stdout = stdout();
 
     enable_raw_mode()?;
 
     execute!(stdout, EnterAlternateScreen)?;
 
-    client::client().await;
+    client::client(addr, "nobody".to_string()).await;
 
     execute!(stdout, LeaveAlternateScreen)?;
 

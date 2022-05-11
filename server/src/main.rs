@@ -37,11 +37,13 @@ async fn process(socket: TcpStream, chan_tx: mpsc::Sender<InternalCommand>) {
     let reader = BufReader::new(reader);
     let mut lines = reader.lines();
 
+    let name = lines.next_line().await.unwrap().unwrap();
+
     let (resp_tx, resp_rx) = oneshot::channel();
 
     chan_tx
         .send(InternalCommand::Connect {
-            name: writer.peer_addr().unwrap().to_string(),
+            name: name.to_string(),
             writer,
             response: resp_tx,
         })

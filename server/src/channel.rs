@@ -12,38 +12,41 @@ pub async fn start_channel(mut rx: mpsc::Receiver<InternalCommand>) {
                 writer,
                 response,
             } => {
-                println!("User connected at {}", name);
+                println!("User connected as {:?}", name);
+
+                users.send_to_all(format!("c {}\n", name).as_bytes());
 
                 let id = users.add(User::new(name, writer));
                 response.send(id).unwrap();
             }
 
             InternalCommand::Disconnect { id } => {
-                let name = &users.get(id).get_name();
+                let name = users.get(id).get_name().to_owned();
 
                 println!("User {:?} disconnected", name);
 
                 users.remove(id);
+                users.send_to_all(format!("d {}\n", name).as_bytes());
             }
 
             InternalCommand::UserCommand { id, command } => {
-                let user = users.get(id);
-                let name = &user.get_name();
+                let name = users.get(id).get_name().to_owned();
 
                 match command {
                     UserCommand::Message(message) => {
-                        println!("User {:?} sent {:?}", name, message);
+                        if message.len() > 0 {
+                            println!("User {:?} sent {:?}", name, message);
 
-                        let message = format!("m {} {}\n", name, message);
-
-                        users.send_to_all(message.as_bytes());
+                            users.send_to_all(format!("m {} {}\n", name, message).as_bytes());
+                        }
                     }
 
                     UserCommand::Name(newname) => {
                         if !newname.contains(' ') {
                             println!("User {:?} changed name to {:?}", name, newname);
 
-                            user.set_name(newname);
+                            users.send_to_all(format!("r {} {}\n", name, newname).as_bytes());
+                            users.get(id).set_name(newname);
                         }
                     }
                 }

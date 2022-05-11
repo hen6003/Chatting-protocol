@@ -5,6 +5,7 @@ use futures_timer::Delay;
 use std::{
     collections::VecDeque,
     io::{stdout, Write},
+    net::SocketAddr,
     time::Duration,
 };
 use tokio::{
@@ -19,9 +20,9 @@ use crossterm::{
     terminal::{self, ClearType},
 };
 
-pub async fn client() {
+pub async fn client(socket: SocketAddr, name: String) {
     // Connect to server
-    let stream = TcpStream::connect("127.0.0.1:6078").await.unwrap();
+    let stream = TcpStream::connect(socket).await.unwrap();
     let (reader, mut writer) = stream.into_split();
     let reader = BufReader::new(reader);
 
@@ -30,6 +31,9 @@ pub async fn client() {
         let stdout = stdout();
         let mut command = String::new();
         let mut eventreader = EventStream::new();
+
+        writer.write_all(name.as_bytes()).await.unwrap();
+        writer.write_u8(b'\n').await.unwrap();
 
         loop {
             let mut delay = Delay::new(Duration::from_millis(1_000)).fuse();
