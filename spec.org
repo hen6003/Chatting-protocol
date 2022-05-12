@@ -2,11 +2,11 @@
 Usernames cannot contain spaces.
 
 ** Connection
-S: Listens on port 6078
-C: Opens connection
-S: Accepts connection
-C: Sends username
-S/C: Starts sending commands
+- S: Listens on port 6078
+- C: Opens connection
+- S: Accepts connection
+- C: Sends username
+- S/C: Starts sending commands
 
 ** Commands
 Commands are the data sent back and forth from clients and servers, they /should/ be processed a line at a time by the server, in the order they came in.

@@ -16,12 +16,12 @@ pub async fn start_channel(mut rx: mpsc::Receiver<InternalCommand>) {
 
                 users.send_to_all(format!("c {}\n", name).as_bytes());
 
-                let id = users.add(User::new(name, writer));
+                let id = users.add(name, writer);
                 response.send(id).unwrap();
             }
 
             InternalCommand::Disconnect { id } => {
-                let name = users.get(id).get_name().to_owned();
+                let name = users.get_name(id).unwrap().to_owned();
 
                 println!("User {:?} disconnected", name);
 
@@ -30,7 +30,7 @@ pub async fn start_channel(mut rx: mpsc::Receiver<InternalCommand>) {
             }
 
             InternalCommand::UserCommand { id, command } => {
-                let name = users.get(id).get_name().to_owned();
+                let name = users.get_name(id).unwrap().to_owned();
 
                 match command {
                     UserCommand::Message(message) => {
@@ -46,7 +46,7 @@ pub async fn start_channel(mut rx: mpsc::Receiver<InternalCommand>) {
                             println!("User {:?} changed name to {:?}", name, newname);
 
                             users.send_to_all(format!("r {} {}\n", name, newname).as_bytes());
-                            users.get(id).set_name(newname);
+                            users.set_name(id, newname).unwrap();
                         }
                     }
                 }

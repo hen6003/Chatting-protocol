@@ -1,22 +1,8 @@
 use tokio::net::tcp::OwnedWriteHalf;
 
-pub struct User {
+struct User {
     name: String,
     writer: OwnedWriteHalf,
-}
-
-impl User {
-    pub fn new(name: String, writer: OwnedWriteHalf) -> Self {
-        Self { name, writer }
-    }
-
-    pub fn get_name(&mut self) -> &String {
-        &self.name
-    }
-
-    pub fn set_name(&mut self, name: String) {
-        self.name = name
-    }
 }
 
 pub struct Users {
@@ -32,12 +18,14 @@ impl Users {
         }
     }
 
-    pub fn add(&mut self, user: User) -> usize {
+    pub fn add(&mut self, name: String, writer: OwnedWriteHalf) -> usize {
+        let user = Some(User { name, writer });
+
         if let Some(empty_id) = self.empty_ids.pop() {
-            self.users[empty_id] = Some(user);
+            self.users[empty_id] = user;
             empty_id
         } else {
-            self.users.push(Some(user));
+            self.users.push(user);
             self.users.len() - 1
         }
     }
@@ -47,8 +35,12 @@ impl Users {
         self.empty_ids.push(id);
     }
 
-    pub fn get(&mut self, id: usize) -> &mut User {
-        self.users[id].as_mut().unwrap()
+    pub fn get_name(&mut self, id: usize) -> Result<&String, ()> {
+        Ok(&self.users[id].as_ref().ok_or(())?.name)
+    }
+
+    pub fn set_name(&mut self, id: usize, name: String) -> Result<(), ()> {
+        Ok(self.users[id].as_mut().ok_or(())?.name = name)
     }
 
     pub fn send_to_all(&self, message: &[u8]) {
